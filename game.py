@@ -20,14 +20,13 @@ def dir_to_icon(direction):
         None : 'o'
         }
     
-    print(sign_dict[direction], end='')
+    return sign_dict[direction]
     
 
 def print_arrows(board):
     for row in board:
         for point in row:
-            #print (dir_to_icon(point['direction']), end='')
-            dir_to_icon(point['direction'])
+            print (dir_to_icon(point['direction']), end='')
         print()
     print()
 
@@ -90,7 +89,7 @@ def move(point, board, score, moves):
     moves += 1
     next_point = calc_next_point(point, temp_board)
     temp_board[point["y"]][point["x"]]["direction"] = None
-    #print_arrows(temp_board)
+    print_arrows(temp_board)
     if next_point == None :
         score += calc_points(temp_board)
         #print (0, score, moves, point)
