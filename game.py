@@ -10,44 +10,42 @@ import pprint
 import math
 from copy import deepcopy
 board_size = 5
-#threshold = 250
 
-def icon(direction):
-    sign = 'o'
+def dir_to_icon(direction):
+    sign_dict = {
+        'up' : '^',
+        'down' : 'v',
+        'left' : '<',
+        'right' : '>',
+        None : 'o'
+        }
     
-    if direction == 'up':
-        sign = '^'
-    elif direction == 'down':
-        sign = 'v'
-    elif direction == 'left':
-        sign = '<'
-    elif direction == 'right':
-        sign = '>'
-    
-    print(sign, end='')
+    print(sign_dict[direction], end='')
     
 
-def show(board):
+def print_arrows(board):
     for row in board:
         for point in row:
-            icon(point['direction'])
+            #print (dir_to_icon(point['direction']), end='')
+            dir_to_icon(point['direction'])
         print()
     print()
+
 
 def calc_points(board) :
     #pp=pprint.PrettyPrinter(indent=4)
     #pp.pprint(board)
     score = 0
     cols = [None for i in range(board_size)]
-    raws = [None for i in range(board_size)]
+    rows = [None for i in range(board_size)]
     for y in range(board_size) :
         for x in range(board_size) :
             if board[y][x]["direction"] == None :
                 score += board[y][x]["points"]
             else :
                 cols[x] = 1
-                raws[y] = 1
-    for i in raws :
+                rows[y] = 1
+    for i in rows :
         if i == None :
             score += 10*(board_size)
     for i in cols :
@@ -92,8 +90,7 @@ def move(point, board, score, moves):
     moves += 1
     next_point = calc_next_point(point, temp_board)
     temp_board[point["y"]][point["x"]]["direction"] = None
-    #print (point, moves)
-    #show(temp_board)
+    #print_arrows(temp_board)
     if next_point == None :
         score += calc_points(temp_board)
         #print (0, score, moves, point)
@@ -118,10 +115,10 @@ def get_move(data):
     for x in range(board_size) :
         for y in range(board_size) :
             temp_result = move(board[y][x], board, 0, 0)
-            #threshold = math.floor(data["score"] / (5*board_size*board_size)) + board_size - 1
-            threshold = 300
-            if ((data["score"] > threshold) and (temp_result[0] > best_result[0])) or ((data["score"] <= threshold) and (temp_result[1] > best_result[1])) :
-            #if ((temp_result[1] > threshold) and (temp_result[1] > best_result[1])) or ((temp_result[1] >= best_result[1]) and (temp_result[0] > best_result[0])) :
+            threshold = math.floor(data["score"] / (5*board_size*board_size)) + board_size - 1
+            #threshold = 300
+            #if ((data["score"] > threshold) and (temp_result[0] > best_result[0])) or ((data["score"] <= threshold) and (temp_result[1] > best_result[1])) :
+            if ((temp_result[1] > threshold) and (temp_result[1] > best_result[1])) or ((temp_result[1] >= best_result[1]) and (temp_result[0] > best_result[0])) :
                 best_result = temp_result
                 best_point = {
                     'x': x,
